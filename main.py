@@ -19,6 +19,8 @@ def cadastro(user: User):
     score = calcula_score(user.renda, user.dividas)
     usuario = user.dict()
     usuario["score"] = score
+    usuario["saldo_reais"] = 0.0
+    usuario["saldo_crypto"] = 0.0
     usuarios.append(usuario)
     return {"msg": f"Usuario {user.nome} cadastrado com sucesso!", "data":usuario}
 
@@ -115,3 +117,60 @@ def pagar_emprestimo(dados: Pagamento):
         "msg": f"Empréstimo quitado em {parcelas} parcelas",
         "detalhes": emprestimo
     }
+
+class Deposito(BaseModel):
+    nome: str
+    valor: float
+
+@app.post("/depositar")
+def depositar(dados: Deposito):
+    usuario = next((u for u in usuarios if u["nome"] == dados.nome), None)
+    if not usuario:
+        return {"erro": "Usuário não encontrado"}
+    
+    if dados.valor <= 0:
+        return {"erro": "O valor do depósito deve ser maior que zero"}
+    
+    usuario["saldo_reais"] += dados.valor
+    
+    return {
+        "msg": f"Depósito de R${dados.valor} realizado com sucesso",
+        "usuario": {
+            "nome": usuario["nome"],
+            "saldo_reais": usuario["saldo_reais"],
+            "saldo_crypto": usuario["saldo_crypto"]
+        }
+    }
+    
+class Conversao(BaseModel):
+    nome:str
+    valor: float
+    
+@app.post("/converter")
+def converter(dados: Conversao):
+    usuario = next((u for u in usuarios if u["nome"] == dados.nome), None)
+    if not usuario:
+        return {"erro": "Usuário não encontrado"}
+    
+    if dados.valor <= 0:
+        return {"erro": "O valor ddeve ser maior que zero"}
+    
+    if usuario["saldo_reais"] < dados.valor:
+        return {"erro":"Saldo insuficiente em reais"}
+    
+    cotacao = 0.00003
+    convertido = dados.valor * cotacao
+    
+    usuario["saldo_reais"] -= dados.valor
+    usuario["saldo_crypto"] += convertido
+    
+    return {
+        "msg": f"Conversão realizada: R${dados.valor} → {convertido:.2f} BTC",
+        "usuario": {
+            "nome": usuario["nome"],
+            "saldo_reais": usuario["saldo_reais"],
+            "saldo_crypto": usuario["saldo_crypto"]
+        }
+    }
+    
+    
