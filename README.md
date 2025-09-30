@@ -31,20 +31,20 @@ A aplicação é uma API em Python (FastAPI) que simula um sistema de empréstim
 
 2. Crie e ative um ambiente virtual:
 ```
-python -m venv venv
-source venv/bin/activate   # Linux/Mac
-venv\Scripts\activate      # Windows
+  python -m venv venv
+  source venv/bin/activate   # Linux/Mac
+  venv\Scripts\activate      # Windows
 ```
 3. Instale as dependências:
 ```
-pip install fastapi uvicorn pydantic
+  pip install fastapi uvicorn pydantic
 
 ```
 4. Rode o servidor:
 ```
-uvicorn main:app --reload
+  uvicorn main:app --reload
 
 ```
 Acesse a documentação interativa:
 ```
-http://127.0.0.1:8000/docs
+  http://127.0.0.1:8000/docs
