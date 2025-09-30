@@ -29,23 +29,22 @@ A aplicação é uma API em Python (FastAPI) que simula um sistema de empréstim
    ```bash
    git clone https://github.com/bisaraujo/Hackaton-QITech.git
 
-Crie e ative um ambiente virtual:
-
+2. Crie e ative um ambiente virtual:
+```
 python -m venv venv
 source venv/bin/activate   # Linux/Mac
 venv\Scripts\activate      # Windows
-
-
-Instale as dependências:
-
+```
+3. Instale as dependências:
+```
 pip install fastapi uvicorn pydantic
 
-
-Rode o servidor:
-
+```
+4. Rode o servidor:
+```
 uvicorn main:app --reload
 
-
+```
 Acesse a documentação interativa:
-
+```
 http://127.0.0.1:8000/docs
